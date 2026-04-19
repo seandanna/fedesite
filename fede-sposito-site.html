@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Fede Sposito — Guitar Lessons / Rock, Blues, Soul</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee+Shade&family=Rubik+Mono+One&family=Special+Elite&family=Anton&family=Oswald:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bone: #f2ead5;
+    --paper: #e9dcb8;
+    --ink: #0a0a0a;
+    --blood: #c41e1e;
+    --blood-dark: #8a0f0f;
+    --gold: #d4a017;
+    --smoke: #1a1a1a;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Oswald', sans-serif;
+    background: var(--ink);
+    color: var(--bone);
+    overflow-x: hidden;
+    line-height: 1.5;
+  }
+
+  /* Global grunge overlay — noise texture over everything */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.08;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/></svg>");
+    mix-blend-mode: overlay;
+  }
+
+  /* Scanline effect */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 998;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0,0,0,0.15) 0px,
+      rgba(0,0,0,0.15) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    mix-blend-mode: multiply;
+    opacity: 0.3;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* ================= NAV ================= */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1rem 2rem;
+    background: rgba(10, 10, 10, 0.85);
+    backdrop-filter: blur(8px);
+    border-bottom: 2px solid var(--blood);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav-logo {
+    font-family: 'Bungee Shade', sans-serif;
+    font-size: 1.5rem;
+    color: var(--blood);
+    letter-spacing: 2px;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Anton', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.9rem;
+    position: relative;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--blood); }
+
+  .nav-links a::before {
+    content: "";
+    position: absolute;
+    bottom: -4px; left: 0;
+    width: 0; height: 2px;
+    background: var(--blood);
+    transition: width 0.3s ease;
+  }
+
+  .nav-links a:hover::before { width: 100%; }
+
+  @media (max-width: 720px) {
+    .nav-links { display: none; }
+  }
+
+  /* ================= HERO ================= */
+  .hero {
+    min-height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse at 30% 40%, rgba(196, 30, 30, 0.25) 0%, transparent 60%),
+      radial-gradient(ellipse at 70% 60%, rgba(212, 160, 23, 0.15) 0%, transparent 60%),
+      linear-gradient(180deg, #0a0a0a 0%, #1a0505 100%);
+    padding: 6rem 2rem 3rem;
+  }
+
+  /* Stage spotlight beams */
+  .spotlight {
+    position: absolute;
+    top: -10%;
+    width: 40vw;
+    height: 120vh;
+    background: linear-gradient(180deg, rgba(255, 220, 100, 0.15) 0%, transparent 80%);
+    transform-origin: top center;
+    pointer-events: none;
+    filter: blur(20px);
+  }
+
+  .spotlight.left { left: 10%; transform: rotate(-8deg); animation: sway1 6s ease-in-out infinite; }
+  .spotlight.right { right: 10%; transform: rotate(8deg); animation: sway2 7s ease-in-out infinite; }
+
+  @keyframes sway1 { 0%,100% { transform: rotate(-8deg); } 50% { transform: rotate(-12deg); } }
+  @keyframes sway2 { 0%,100% { transform: rotate(8deg); } 50% { transform: rotate(12deg); } }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 1100px;
+  }
+
+  .hero-tag {
+    font-family: 'Special Elite', monospace;
+    color: var(--gold);
+    font-size: 1rem;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    opacity: 0.9;
+  }
+
+  .hero-tag::before, .hero-tag::after {
+    content: "★";
+    margin: 0 1rem;
+    color: var(--blood);
+  }
+
+  .hero h1 {
+    font-family: 'Bungee Shade', sans-serif;
+    font-size: clamp(3.5rem, 13vw, 11rem);
+    line-height: 0.9;
+    color: var(--bone);
+    text-transform: uppercase;
+    text-shadow:
+      6px 6px 0 var(--blood),
+      12px 12px 0 var(--ink);
+    letter-spacing: -2px;
+    transform: rotate(-2deg);
+    margin-bottom: 2rem;
+    animation: glitch-in 1.2s ease-out;
+  }
+
+  @keyframes glitch-in {
+    0% { opacity: 0; transform: rotate(-2deg) translateX(-20px) skewX(10deg); }
+    50% { opacity: 1; transform: rotate(-2deg) translateX(10px) skewX(-5deg); }
+    100% { opacity: 1; transform: rotate(-2deg); }
+  }
+
+  .hero-subtitle {
+    font-family: 'Rubik Mono One', sans-serif;
+    font-size: clamp(1rem, 2.5vw, 1.6rem);
+    letter-spacing: 4px;
+    color: var(--bone);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+  }
+
+  .hero-subtitle span {
+    color: var(--blood);
+    position: relative;
+    display: inline-block;
+    padding: 0 0.3em;
+  }
+
+  .hero-subtitle span::before {
+    content: "";
+    position: absolute;
+    inset: -5px -2px;
+    background: var(--blood);
+    z-index: -1;
+    transform: skewX(-10deg);
+    opacity: 0;
+    animation: flash 1.8s 1.2s ease-out forwards;
+  }
+
+  @keyframes flash {
+    0% { opacity: 0; }
+    50% { opacity: 0.15; }
+    100% { opacity: 0; }
+  }
+
+  .hero-meta {
+    font-family: 'Special Elite', monospace;
+    margin-top: 3rem;
+    font-size: 1rem;
+    color: var(--paper);
+    opacity: 0.75;
+    letter-spacing: 2px;
+  }
+
+  .hero-meta span { color: var(--blood); font-weight: bold; }
+
+  .cta-group {
+    margin-top: 3rem;
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: 'Anton', sans-serif;
+    font-size: 1.2rem;
+    padding: 1rem 2.5rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.2s ease;
+    display: inline-block;
+  }
+
+  .btn-primary {
+    background: var(--blood);
+    color: var(--bone);
+    clip-path: polygon(0 0, 100% 0, 97% 100%, 3% 100%);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-3px) rotate(-1deg);
+    background: var(--blood-dark);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--bone);
+    border: 3px solid var(--bone);
+  }
+
+  .btn-outline:hover {
+    transform: translateY(-3px) rotate(1deg);
+    background: var(--bone);
+    color: var(--ink);
+  }
+
+  /* Amp glow at bottom of hero */
+  .hero-floor {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 60px;
+    background: linear-gradient(180deg, transparent, rgba(196, 30, 30, 0.4));
+  }
+
+  /* ================= SECTIONS ================= */
+  section {
+    padding: 7rem 2rem;
+    position: relative;
+  }
+
+  .section-label {
+    font-family: 'Special Elite', monospace;
+    color: var(--blood);
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    display: inline-block;
+  }
+
+  .section-label::before { content: "// "; }
+
+  .section-title {
+    font-family: 'Bungee Shade', sans-serif;
+    font-size: clamp(2.5rem, 7vw, 5rem);
+    line-height: 0.95;
+    text-transform: uppercase;
+    margin-bottom: 3rem;
+    letter-spacing: -1px;
+  }
+
+  /* ================= ABOUT ================= */
+  .about {
+    background: var(--bone);
+    color: var(--ink);
+    position: relative;
+  }
+
+  /* Torn paper effect top */
+  .about::before {
+    content: "";
+    position: absolute;
+    top: -1px; left: 0; right: 0;
+    height: 40px;
+    background: var(--bone);
+    clip-path: polygon(
+      0 40px, 3% 20px, 6% 35px, 10% 15px, 14% 30px, 18% 10px, 22% 28px,
+      26% 18px, 30% 32px, 34% 12px, 38% 28px, 42% 20px, 46% 30px, 50% 14px,
+      54% 30px, 58% 18px, 62% 32px, 66% 16px, 70% 28px, 74% 22px, 78% 34px,
+      82% 18px, 86% 30px, 90% 20px, 94% 32px, 97% 16px, 100% 30px, 100% 40px
+    );
+  }
+
+  .about-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  @media (max-width: 820px) {
+    .about-grid { grid-template-columns: 1fr; }
+  }
+
+  .about-text p {
+    font-size: 1.15rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.7;
+  }
+
+  .about-text p:first-of-type::first-letter {
+    font-family: 'Bungee Shade', sans-serif;
+    font-size: 5rem;
+    float: left;
+    line-height: 0.9;
+    padding: 0.3rem 0.7rem 0 0;
+    color: var(--blood);
+  }
+
+  .pull-quote {
+    font-family: 'Special Elite', monospace;
+    font-size: 1.8rem;
+    line-height: 1.3;
+    border-left: 6px solid var(--blood);
+    padding: 1rem 0 1rem 1.5rem;
+    margin: 2rem 0;
+    color: var(--smoke);
+    position: relative;
+  }
+
+  .pull-quote::before {
+    content: "\201C";
+    font-size: 5rem;
+    color: var(--blood);
+    position: absolute;
+    top: -1rem; left: -0.5rem;
+    font-family: Georgia, serif;
+    opacity: 0.3;
+  }
+
+  .stats-card {
+    background: var(--ink);
+    color: var(--bone);
+    padding: 2.5rem 2rem;
+    position: relative;
+    transform: rotate(1.5deg);
+    box-shadow: 8px 8px 0 var(--blood);
+  }
+
+  .stats-card h3 {
+    font-family: 'Anton', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--gold);
+    margin-bottom: 2rem;
+    font-size: 1.2rem;
+  }
+
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.8rem 0;
+    border-bottom: 1px dashed rgba(242, 234, 213, 0.25);
+  }
+
+  .stat-row:last-child { border-bottom: none; }
+
+  .stat-label {
+    font-family: 'Special Elite', monospace;
+    letter-spacing: 1px;
+    font-size: 0.95rem;
+    opacity: 0.85;
+  }
+
+  .stat-value {
+    font-family: 'Rubik Mono One', sans-serif;
+    font-size: 1.8rem;
+    color: var(--blood);
+  }
+
+  .stat-value.small {
+    font-size: 1rem;
+    color: var(--bone);
+  }
+
+  /* ================= LESSONS / STYLE ================= */
+  .styles {
+    background: var(--ink);
+    padding: 8rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .styles-wrapper {
+    max-width: 1300px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  .genre-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+
+  .genre-card {
+    background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+    border: 2px solid rgba(242, 234, 213, 0.1);
+    padding: 2.5rem 1.5rem;
+    position: relative;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    cursor: default;
+  }
+
+  .genre-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(196, 30, 30, 0.15), transparent);
+    transition: left 0.5s ease;
+  }
+
+  .genre-card:hover::before { left: 100%; }
+
+  .genre-card:hover {
+    border-color: var(--blood);
+    transform: translateY(-5px) rotate(-1deg);
+  }
+
+  .genre-num {
+    font-family: 'Rubik Mono One', sans-serif;
+    color: var(--blood);
+    font-size: 0.9rem;
+    letter-spacing: 3px;
+    margin-bottom: 1rem;
+    opacity: 0.7;
+  }
+
+  .genre-name {
+    font-family: 'Bungee Shade', sans-serif;
+    font-size: 1.8rem;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    letter-spacing: 1px;
+  }
+
+  .genre-desc {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.9rem;
+    color: var(--paper);
+    opacity: 0.7;
+    line-height: 1.5;
+    letter-spacing: 1px;
+  }
+
+  /* ================= APPROACH / 3 PILLARS ================= */
+  .approach {
+    background:
+      linear-gradient(180deg, var(--ink) 0%, #140202 100%);
+    padding: 7rem 2rem;
+    position: relative;
+  }
+
+  .pillar-list {
+    max-width: 1100px;
+    margin: 0 auto;
+    list-style: none;
+  }
+
+  .pillar {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 3rem;
+    padding: 3rem 0;
+    border-bottom: 2px dashed rgba(242, 234, 213, 0.15);
+    align-items: start;
+  }
+
+  .pillar:last-child { border-bottom: none; }
+
+  @media (max-width: 720px) {
+    .pillar { grid-template-columns: 1fr; gap: 1rem; padding: 2rem 0; }
+  }
+
+  .pillar-num {
+    font-family: 'Bungee Shade', sans-serif;
+    font-size: 5rem;
+    color: var(--blood);
+    line-height: 1;
+  }
+
+  .pillar-content h3 {
+    font-family: 'Anton', sans-serif;
+    font-size: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+    color: var(--gold);
+  }
+
+  .pillar-content p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    max-width: 700px;
+  }
+
+  /* ================= TESTIMONIALS ================= */
+  .testimonials {
+    background: var(--paper);
+    color: var(--ink);
+    padding: 7rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .testimonials::before {
+    content: "FANS SAY";
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) rotate(-5deg);
+    font-family: 'Bungee Shade', sans-serif;
+    font-size: clamp(8rem, 25vw, 22rem);
+    color: var(--blood);
+    opacity: 0.06;
+    letter-spacing: -5px;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .testimonial-grid {
+    max-width: 1200px;
+    margin: 3rem auto 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .testimonial {
+    background: var(--bone);
+    padding: 2rem;
+    position: relative;
+    box-shadow: 6px 6px 0 var(--ink);
+    border: 2px solid var(--ink);
+  }
+
+  .testimonial:nth-child(1) { transform: rotate(-1.5deg); }
+  .testimonial:nth-child(2) { transform: rotate(1deg); }
+  .testimonial:nth-child(3) { transform: rotate(-0.5deg); }
+  .testimonial:nth-child(4) { transform: rotate(1.5deg); }
+
+  .testimonial:hover {
+    transform: rotate(0) translateY(-4px);
+    transition: transform 0.3s ease;
+  }
+
+  .stars {
+    color: var(--blood);
+    font-size: 1.2rem;
+    letter-spacing: 3px;
+    margin-bottom: 1rem;
+  }
+
+  .testimonial-text {
+    font-family: 'Special Elite', monospace;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  .testimonial-author {
+    font-family: 'Anton', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.9rem;
+    color: var(--blood-dark);
+    border-top: 1px solid var(--ink);
+    padding-top: 1rem;
+  }
+
+  /* ================= CONTACT ================= */
+  .contact {
+    background: var(--ink);
+    padding: 8rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .contact-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at center, rgba(196, 30, 30, 0.3) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .contact-content { position: relative; z-index: 2; max-width: 800px; margin: 0 auto; }
+
+  .contact .section-title {
+    font-size: clamp(3rem, 10vw, 7rem);
+    color: var(--bone);
+    text-shadow: 5px 5px 0 var(--blood);
+    margin-bottom: 2rem;
+  }
+
+  .contact p {
+    font-family: 'Special Elite', monospace;
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    margin-bottom: 3rem;
+    opacity: 0.9;
+  }
+
+  .contact-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  /* ================= FOOTER ================= */
+  footer {
+    background: #050505;
+    border-top: 3px solid var(--blood);
+    padding: 2rem;
+    text-align: center;
+    font-family: 'Special Elite', monospace;
+    color: var(--paper);
+    opacity: 0.7;
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+  }
+
+  footer span { color: var(--blood); }
+
+  /* Reveal on scroll */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">FEDE</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#styles">Styles</a></li>
+    <li><a href="#approach">Approach</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+    <li><a href="#contact">Book</a></li>
+  </ul>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="spotlight left"></div>
+  <div class="spotlight right"></div>
+
+  <div class="hero-content">
+    <div class="hero-tag">Est. Buenos Aires · Argentina</div>
+    <h1>Fede<br>Sposito</h1>
+    <p class="hero-subtitle">Guitar lessons for the <span>rock &amp; roll</span> soul</p>
+    <div class="hero-meta">
+      <span>20+ YEARS</span> PLAYING &nbsp;·&nbsp; <span>10+ YEARS</span> TEACHING &nbsp;·&nbsp; <span>ALL LEVELS</span> WELCOME
+    </div>
+    <div class="cta-group">
+      <a href="#contact" class="btn btn-primary">Book a lesson</a>
+      <a href="#about" class="btn btn-outline">Meet Fede</a>
+    </div>
+  </div>
+
+  <div class="hero-floor"></div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section class="about" id="about">
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <div class="section-label">The story</div>
+      <h2 class="section-title" style="color: var(--ink);">From Buenos Aires,<br>with a six-string.</h2>
+
+      <p>Hola. I'm Federico — Fede to the people who matter. I've been playing guitar for over twenty years, and the first time I picked one up I knew it was going to be for life. No exaggeration. Just the truth.</p>
+
+      <p>I work as both a musician and a teacher, and I'm a graduate of E.M.P.A. in Buenos Aires. Teaching isn't a side gig for me — it's the other half of the same passion. Watching a student go from "I can't" to ripping through their first solo is the kind of thing that keeps me plugged in.</p>
+
+      <div class="pull-quote">
+        Every student has their own way of learning.<br>My job is to figure out yours — and build the lessons around it.
+      </div>
+
+      <p>Whether you're a total beginner who's never held a pick, or you've been strumming for years and want to finally understand what's happening under your fingers — we'll meet you where you are and push from there.</p>
+    </div>
+
+    <aside class="stats-card reveal">
+      <h3>★ The Credits ★</h3>
+      <div class="stat-row">
+        <span class="stat-label">Years playing</span>
+        <span class="stat-value">20+</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Years teaching</span>
+        <span class="stat-value">10+</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Graduated from</span>
+        <span class="stat-value small">E.M.P.A. · B.A.</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Home base</span>
+        <span class="stat-value small">Argentina</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Teaching in</span>
+        <span class="stat-value small">English · Español</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Format</span>
+        <span class="stat-value small">Online · 1-on-1</span>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ============ STYLES ============ -->
+<section class="styles" id="styles">
+  <div class="styles-wrapper">
+    <div class="reveal">
+      <div class="section-label">What we play</div>
+      <h2 class="section-title">Five flavors.<br>One attitude.</h2>
+    </div>
+
+    <div class="genre-grid">
+      <div class="genre-card reveal">
+        <div class="genre-num">/ 01</div>
+        <div class="genre-name">Rock</div>
+        <p class="genre-desc">From classic riffs to modern distortion. The foundation of everything loud.</p>
+      </div>
+      <div class="genre-card reveal">
+        <div class="genre-num">/ 02</div>
+        <div class="genre-name">Blues</div>
+        <p class="genre-desc">The bent note. The lived-in feel. The stuff rock was built on.</p>
+      </div>
+      <div class="genre-card reveal">
+        <div class="genre-num">/ 03</div>
+        <div class="genre-name">Pop</div>
+        <p class="genre-desc">Hooks, progressions, and the art of the perfect three-minute song.</p>
+      </div>
+      <div class="genre-card reveal">
+        <div class="genre-num">/ 04</div>
+        <div class="genre-name">Soul</div>
+        <p class="genre-desc">Groove, feel, and chord voicings that make your guitar sing.</p>
+      </div>
+      <div class="genre-card reveal">
+        <div class="genre-num">/ 05</div>
+        <div class="genre-name">Funk</div>
+        <p class="genre-desc">Rhythm is the weapon. Tight picking, sharp accents, dancing hands.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ APPROACH ============ -->
+<section class="approach" id="approach">
+  <div style="max-width: 1100px; margin: 0 auto;">
+    <div class="reveal">
+      <div class="section-label">How we roll</div>
+      <h2 class="section-title">The three<br>pillars.</h2>
+    </div>
+
+    <ul class="pillar-list">
+      <li class="pillar reveal">
+        <div class="pillar-num">01</div>
+        <div class="pillar-content">
+          <h3>Analyze every song</h3>
+          <p>We don't just play tunes — we take them apart. How does the melody sit over the chords? Why does that change hit so hard? Understanding the <em>why</em> is what separates copying from creating.</p>
+        </div>
+      </li>
+      <li class="pillar reveal">
+        <div class="pillar-num">02</div>
+        <div class="pillar-content">
+          <h3>Train your ear</h3>
+          <p>Audio perception is the muscle most players never work. We build it every lesson — so you can hear a progression and already know what's happening before you even reach for the fretboard.</p>
+        </div>
+      </li>
+      <li class="pillar reveal">
+        <div class="pillar-num">03</div>
+        <div class="pillar-content">
+          <h3>Write your own stuff</h3>
+          <p>Patterns on melodies. Patterns in chord progressions. Once you see them, you can move them around, twist them, and build songs that are yours. That's the real endgame.</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIALS ============ -->
+<section class="testimonials" id="testimonials">
+  <div style="max-width: 1200px; margin: 0 auto; text-align: center; position: relative; z-index: 2;">
+    <div class="reveal">
+      <div class="section-label" style="color: var(--blood-dark);">Word on the street</div>
+      <h2 class="section-title">What students<br>say.</h2>
+    </div>
+  </div>
+
+  <div class="testimonial-grid">
+    <div class="testimonial reveal">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">"If you want to learn how to play the guitar look no further. Federico deserves all the praise possible — an amazing teacher and a very kind person. Always in a good mood and positive."</p>
+      <div class="testimonial-author">— Long-term student</div>
+    </div>
+    <div class="testimonial reveal">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">"I've been taking lessons from Federico for months. Before this, I changed many teachers, but I don't want to part with Fede. He adjusts to you on the spot and explains theory in such an interesting way."</p>
+      <div class="testimonial-author">— Intermediate player</div>
+    </div>
+    <div class="testimonial reveal">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">"Fede is patient, kind, and helps my daughter feel confident. We've seen a big improvement in her playing since she started. If you're looking for a great guitar teacher who's nice and helps you get better — choose Fede!"</p>
+      <div class="testimonial-author">— Parent of student</div>
+    </div>
+    <div class="testimonial reveal">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">"Tengo la suerte de tomar clases con Fede — un excelente guitarrista, excelente profesor, y por sobre todo una excelente persona. Lo recomiendo para todos los niveles y edades."</p>
+      <div class="testimonial-author">— Estudiante avanzado</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section class="contact" id="contact">
+  <div class="contact-bg"></div>
+  <div class="contact-content">
+    <div class="reveal">
+      <div class="section-label">Last call</div>
+      <h2 class="section-title">Ready to<br>plug in?</h2>
+      <p>Book a lesson. Bring your guitar, your questions, and whatever songs you've been dying to play. Let's build something loud.</p>
+      <div class="contact-links">
+        <a href="https://www.lessonface.com/instructor/federico-sposito" target="_blank" rel="noopener" class="btn btn-primary">Book on Lessonface</a>
+        <a href="https://preply.com/en/tutor/219347" target="_blank" rel="noopener" class="btn btn-outline">Book on Preply</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  FEDE SPOSITO · GUITAR INSTRUCTOR · BUENOS AIRES, ARGENTINA &nbsp;<span>★</span>&nbsp; KEEP IT LOUD
+</footer>
+
+<script>
+  // Smooth reveal on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
